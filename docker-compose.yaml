@@ -1,0 +1,15 @@
+web:
+    image: nginx:latest
+    ports:
+        - "8080:80"
+    volumes:
+        - ./code:/code
+        - ./nginx/conf.d/:/etc/nginx/conf.d/
+        - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        - ./nginx/proxy.conf:/etc/nginx/proxy.conf
+    links:
+        - php7
+php7:
+    image: php:7-fpm
+    volumes:
+        - ./code:/code
