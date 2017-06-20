@@ -1,15 +1,27 @@
 web:
     image: nginx:latest
     ports:
-        - "8080:80"
+        - "80:80"
     volumes:
-        - ./code:/code
         - ./nginx/conf.d/:/etc/nginx/conf.d/
         - ./nginx/nginx.conf:/etc/nginx/nginx.conf
         - ./nginx/proxy.conf:/etc/nginx/proxy.conf
+        - ~/laravel:/var/www/laravel
     links:
         - php7
 php7:
-    image: php:7-fpm
+    build: ./php7
     volumes:
-        - ./code:/code
+        - ~/laravel:/var/www/laravel
+        - ~/docker-data/php7/conf.d:/usr/local/etc/php/conf.d
+    links:
+        - mysql
+mysql:
+    image: mysql:5.7
+    ports:
+        - "3306:3306"
+    env_file:
+        - .mysql.env 
+    volumes:
+        - ~/docker-data/mysql/data:/var/lib/mysql
+        - ~/docker-data/mysql/conf.d:/etc/mysql/conf.d
